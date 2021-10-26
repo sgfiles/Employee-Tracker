@@ -11,7 +11,7 @@ VALUES   ('Manager', 50000, 01),
          ('Cashier', 20000, 04);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES   ('Homer', 'Simpson', 3, NULL)
-         ('Turanga', 'Leela', 1)
-         ('Arthur', 'Read', 4, NULL)
-         ('Peggy', 'Bundy',2)
+VALUES   ('Homer', 'Simpson', 03, NULL),
+         ('Turanga', 'Leela', 01,11),
+         ('Arthur', 'Read', 04, NULL),
+         ('Peggy', 'Bundy',02,12);
