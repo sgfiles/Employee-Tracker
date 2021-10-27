@@ -1,8 +1,10 @@
+use employees_db;
+
 INSERT INTO deparment (id, name)
-VALUES  (01, 'Women'),
-        (02, 'Men'),
-        (03, 'Kids'),
-        (04, 'Pets');
+VALUES  ( 'Women'),
+        ( 'Men'),
+        ( 'Kids'),
+        ( 'Pets');
 
 INSERT INTO role (title,salary, department_id)
 VALUES   ('Manager', 50000, 01),
@@ -12,6 +14,6 @@ VALUES   ('Manager', 50000, 01),
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES   ('Homer', 'Simpson', 03, NULL),
-         ('Turanga', 'Leela', 01,11),
+         ('Turanga', 'Leela', 01,3),
          ('Arthur', 'Read', 04, NULL),
-         ('Peggy', 'Bundy',02,12);
+         ('Peggy', 'Bundy',02,1);
