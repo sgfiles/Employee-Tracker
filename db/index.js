@@ -12,20 +12,21 @@ class DB {
             'SELECT department.id, department.name FROM department;'
         );
     }
-    // findAllPossibleManagers(employeeId) {
-    //     return this.connection.promise().query(
-    //         'SELECT id, first_name, last_name FROM employee WHERE id == ?',
-    //         employeeId
-    //     );
-    // }
-    createEmployee(employee) {
-        return this.connection.promise().query('INSERT INTO employee SET ?', employee);
-    }
-    removeEmployee(employeeId) {
+    viewRoles() {
         return this.connection.promise().query(
-            'DELETE FROM employee WHERE id = ?',
-            employeeId
+            'SELECT role.id, role.title, department.name AS department, role.salary FROM role LEFT JOIN department on role.department_id = department.id;'
         );
+    }
+
+    createEmployee(employee) {
+        return this.connection.promise().query('INSERT INTO employee SET ', employee);
+    }
+    createRole(role) {
+        return this.connection.promise().query('INSERT INTO role SET ', role);
+    }
+    
+    createDepartment(department) {
+        return this.connection.promise().query('INSERT INTO department SET ', department);
     }
     updateEmployeeRole(employeeId, roleId) {
         return this.connection.promise().query(
@@ -33,25 +34,6 @@ class DB {
             [roleId, employeeId]
         );
     }
-    // updateEmployeeManager(employeeId, managerId) {
-    //     return this.connection.promise().query(
-    //         'UPDATE employee SET manager_id = ? WHERE id = ?',
-    //         [managerId, employeeId]
-    //     );
-    //}
-    findAllRoles() {
-        return this, connection.promise().query(
-            'SELECT role.id, role.title, department.name AS department, role.salary FROM role LEFT JOIN department on role.department_id = department.id;'
-        );
-    }
-    createRole(role) {
-        return this.connection.promise().query('INSERT INTO role SET ?', role);
-    }
-    removeRole(roleId) {
-        return this.connection.promise().query(
-            'SELECT department.id, department.name FROM department:');
-    }
-    
 
 
 }

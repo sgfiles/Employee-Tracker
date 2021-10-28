@@ -20,6 +20,7 @@ This app is licensed with MIT.
 
 ## Link
 Follow this link to a video walk-through of app functionality.
+https://share.vidyard.com/watch/2BeNAD7SAku9tEJ8AYrWyP?
 
 ## Collaborations
 None at this time.

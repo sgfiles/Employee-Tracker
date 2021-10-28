@@ -21,36 +21,24 @@ inquirer
                     value: 'VIEW_BY_DEPARTMENT'
                 },
                 {
+                    name: 'View Roles',
+                    value: 'VIEW_ROLES'
+                },
+                {
                     name: 'Add Employee',
                     value: 'ADD_EMPLOYEE'
-                },
-                {
-                    name: 'Remove Employee',
-                    value: 'REMOVE_EMPLOYEE'
-                },
-                {
-                    name: 'Update Employee Role',
-                    value: 'UPDATE_EMPLOYEE_ROLE'
-                },
-                {
-                    name: 'View All Roles',
-                    value: 'VIEW_ALL_ROLES'
                 },
                 {
                     name: 'Add Role',
                     value: 'ADD_ROLE'
                 },
                 {
-                    name: 'Remove Role',
-                    value: 'REMOVE_ROLE'
-                },
-                {
                     name: 'Add Department',
                     value: 'ADD_DEPARTMENT'
                 },
                 {
-                    name: 'Remove Department',
-                    value: 'REMOVE_DEPARTMENT'
+                    name: 'Update Employee Role',
+                    value: 'UPDATE_EMPLOYEE_ROLE'
                 },
                 {
                     name: 'Quit',
@@ -68,28 +56,21 @@ inquirer
             case 'VIEW_BY_DEPARTMENT':
                 viewByDepartment();
                 break;
+                case 'VIEW_ROLES':
+                viewRoles();
+                break;
             case 'ADD_EMPLOYEE':
                 addEmployee();
-            case 'REMOVE_EMPLOYEE':
-                removeEmployee();
-            case 'UPDATE_EMPLOYEE_ROLE':
-                updateEmployeeRole();
-                break;
-            case 'VIEW_ALL_ROLES':
-                viewAllRoles();
-                break;
+                 break;
             case 'ADD_ROLE':
                 addRole();
                 break;
-            case 'REMOVE_ROLE':
-                removeRole();
-                break;
             case 'ADD_DEPARTMENT':
-                addDepartment();
+                createDepartment();
                 break;
-            case 'REMOVE_DEPARTMENT':
-                removeDepartment();
-                break;
+            case 'UPDATE_EMPLOYEE_ROLE':
+                 updateEmployeeRole();
+                break;   
             default:
                 quit();
         }
@@ -117,7 +98,24 @@ function viewByDepartment() {
         .then(() => loadPrompts());
 }
 
- function addEmployee() {
+function viewRoles() {
+    db.viewRoles('SELECT * FROM role', (err, res) => {
+        if (err) throw err;
+        console.log('\n')
+        console.table(roles)
+    })
+    .then(results => {
+        (([rows]) => {
+            let department_id = rows;
+            console.log('Finished')
+            console.table(roles)
+        })
+    } 
+    )
+    .then(() => loadPrompts());
+}
+
+function addEmployee() {
      db.createEmployee()
      .then(([rows]) => {
          let employee = rows;
@@ -127,58 +125,19 @@ function viewByDepartment() {
          }))
      })
  }
-// function viewEmployeesByManager() {
-//     db.findAllEmployees()
-//     .then(([rows]) => {
-//         let managers = rows;
-//         const managerChoices = managers.map(({ id, first_name, last_name}) => ({
-//             name: `${first_name} ${last_name}`,
-//             value: id
-//         }));
 
-//         prompt([
-//             {
-//                 type:'list',
-//                 name:'managerId',
-//                 message:'Which employee do you want to see direct reports for?',
-//                 choices: managerChoices
-//             }
-//         ])
-//         .then(res => db.findAllEmployeesByManager(res.managerId))
-//         .then(([rows]) => {
-//             let employees = rows;
-//             console.log('\n');
-//             if (employees.length == 0) {
-//                 console.log('The selected employee has no direct reports');
-//             } else {
-//                 console.table(employees);
-//             }
-//         })
-//         .then(() => inquirer.prompt())
-//     });
-// }
+ function addRole() {
+    db.createRole()
+    .then(([rows]) => {
+        let addRole = rows;
+    }).then(() => console.log('Role added'))
+}
 
-function removeEmployee() {
-    db.findAllEmployees()
-        .then(([rows]) => {
-            let employees = rows;
-            const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
-                name: `${first_name} ${last_name}`,
-                value: id
-            }));
-
-            prompt([
-                {
-                    type: 'list',
-                    name: 'employeeId',
-                    message: 'Which employee do you want to remove?',
-                    choices: employeeChoices
-                }
-            ])
-                .then(res => db.removeEmployee(res.employeeId))
-                .then(() => console.log('Removed employee from the database'))
-                .then(() => inquirer.prompt())
-        })
+function createDepartment() {
+    db.addDepartment()
+    .then(([rows]) => {
+        let addDepartment = db.createDepartment(role)
+    }).then(() => console.log('Added Department!'))
 }
 
 function updateEmployeeRole() {
@@ -217,52 +176,12 @@ function updateEmployeeRole() {
                             ])
                                 .then(res => db.updateEmployeeRole(employeeId, res.roleId))
                                 .then(() => console.log('Updated employees role'))
-                                .then(() => inquirer.prompt())
+                                .then(() => loadPrompts())
                         });
                 });
         })
 }
 
-function viewAllRoles() {
-    db.findAllRoles()
-        .then(([rows]) => {
-            let roles = rows;
-            const viewRoleChoices = role.map(({ id, title}) => {
-                name:title,
-                value; id
-            })
-
-        })
-}
-
-function addRole() {
-    db.createRole()
-    .then(([rows]) => {
-        let addRole = rows;
-    }).then(() => console.log('Role added'))
-}
-
-function removeRole() {
-    db.removeRole()
-    .then(([rows]) => {
-         removeRoleChoices = role.destroy(({first_name, last_name, id}) => ({
-            name: `${first_name} ${last_name}`,
-            value: id
-        }))
-        .then(() => console.log('Removed role from the database'))
-    })
-}
-
-function addDepartment() {
-    db.addDepartment()
-    .then(([rows]) => {
-        let addDepartment = db.updateDepartment(role)
-    }).then(() => console.log('Added Department!'))
-}
-
-function removeDepartment() {
-    db.removeDepartment
-}
 
 function quit() {
     console.log('Goodbye') 
