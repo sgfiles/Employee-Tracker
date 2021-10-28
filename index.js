@@ -99,31 +99,80 @@ function viewByDepartment() {
 }
 
 function viewRoles() {
-    db.viewRoles('SELECT * FROM role', (err, res) => {
-        if (err) throw err;
-        console.log('\n')
+    db.findRoles()
+    .then(([rows]) => {
+        let roles = rows;
+        console.log('\n');
         console.table(roles)
+
     })
-    .then(results => {
-        (([rows]) => {
-            let department_id = rows;
-            console.log('Finished')
-            console.table(roles)
-        })
-    } 
-    )
-    .then(() => loadPrompts());
+    .then(() => loadPrompts())
 }
 
 function addEmployee() {
-     db.createEmployee()
-     .then(([rows]) => {
-         let employee = rows;
-         const addEmployeeChoice = create.employee(({ name, id}) => ({
-             name: name,
-             value:id
-         }))
-     })
+    inquirer.prompt([
+        {
+            name: 'first_name',
+            message:"What's employee first name?"
+        },
+        {
+            name:'last_name',
+            message:"What is employee last name?"
+        },
+    ])
+
+    .then(res => {
+        let firstName = res.first_name;
+        let lastName = res.last_name
+        db.findRoles()
+        .then(([rows]) => {
+            let roles = rows;
+           const choiceRoles = roles.map(({id, title}) =>
+           ({
+               name:title,
+               value:id
+           }))
+           inquirer.prompt({
+               
+                   type: 'list',
+                   name: 'roleId',
+                   message:"What is the employee role?",
+                   choices: choiceRoles
+           })
+           .then(res => {
+               let roleId = res.roleId
+               db.findAllEmployees()
+               .then(([rows]) => {
+                   let employees = rows;
+                   const choiceManagers = employees.map(({id, first_name, last_name}) => ({
+                       value: id,
+                       name: `${first_name} ${last_name}`
+                   }))
+                   choiceManagers.unshift({name:"none", value:null})
+                   inquirer.prompt({
+                       type:'list',
+                       name:'managerId',
+                       message:"Who is this employee's manager?",
+                       choices: choiceManagers
+                   })
+                   .then(res => {
+                       let employee = {
+                           manager_id:res.managerId,
+                           role_id: roleId,
+                         first_name:firstName, last_name:lastName 
+                       }
+                       db.createEmployee()
+
+                   }).then(() => console.log(
+                    `Added ${firstName} ${lastName} to the database`
+                  ))
+                  .then(() => loadPrompts())
+               })
+
+           })
+    
+        })
+    })
  }
 
  function addRole() {

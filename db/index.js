@@ -12,14 +12,14 @@ class DB {
             'SELECT department.id, department.name FROM department;'
         );
     }
-    viewRoles() {
+    findRoles() {
         return this.connection.promise().query(
             'SELECT role.id, role.title, department.name AS department, role.salary FROM role LEFT JOIN department on role.department_id = department.id;'
         );
     }
 
     createEmployee(employee) {
-        return this.connection.promise().query('INSERT INTO employee SET ', employee);
+        return this.connection.promise().query('INSERT INTO employee SET ?', employee);
     }
     createRole(role) {
         return this.connection.promise().query('INSERT INTO role SET ', role);
